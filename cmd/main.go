@@ -10,7 +10,6 @@ import (
 	"github.com/thangsuperman/bee-happy/db"
 )
 
-// TODO:
 func main() {
 	db, err := db.NewMySQLStorage(mysql.Config{
 		User:                 config.Envs.DBUser,
