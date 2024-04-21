@@ -20,7 +20,7 @@ func TestUserServiceHandlers(t *testing.T) {
 		payload := types.RegisterUserPayload{
 			FirstName: "Thang",
 			LastName:  "Phan",
-			Email:     "hi",
+			Email:     "invalid_email",
 			Password:  "hello",
 		}
 
