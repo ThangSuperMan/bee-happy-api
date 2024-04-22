@@ -42,8 +42,7 @@ func (h *Handler) handleRegister(w http.ResponseWriter, r *http.Request) {
 	}
 
 	_, err := h.store.GetUserByEmail(payload.Email)
-
-	if err != nil {
+	if err == nil {
 		utils.WriteError(w, http.StatusBadRequest, fmt.Errorf("user with email %s already exists", payload.Email))
 		return
 	}
@@ -60,9 +59,7 @@ func (h *Handler) handleRegister(w http.ResponseWriter, r *http.Request) {
 		Email:     payload.Email,
 		Password:  hashedPassword,
 	})
-
 	if err != nil {
-		fmt.Println("error create user")
 		utils.WriteError(w, http.StatusInternalServerError, err)
 	}
 
