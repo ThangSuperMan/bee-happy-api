@@ -58,6 +58,7 @@ func (h *Handler) handleLogin(w http.ResponseWriter, r *http.Request) {
 
 	if !auth.ComparePassword(u.Password, []byte(payload.Password)) {
 		utils.WriteError(w, http.StatusBadRequest, fmt.Errorf("password does not correct, please retry!"))
+		return
 	}
 
 	secret := []byte(config.Envs.JWTSecret)
