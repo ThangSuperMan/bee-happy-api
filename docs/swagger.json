@@ -1,0 +1,172 @@
+{
+    "swagger": "2.0",
+    "info": {
+        "description": "Manage feeds, chat with fiends. It also provides endpoints for searching feed by keyword",
+        "title": "Bee happy API",
+        "contact": {
+            "name": "Thang Phan",
+            "url": "http://thangphan.com",
+            "email": "thanglearndevops@gmail.com"
+        },
+        "version": "1.0"
+    },
+    "host": "localhost:3000",
+    "paths": {
+        "/api/v1/login": {
+            "post": {
+                "description": "Login by email and password",
+                "consumes": [
+                    "application/json"
+                ],
+                "produces": [
+                    "application/json"
+                ],
+                "tags": [
+                    "User"
+                ],
+                "summary": "Login",
+                "parameters": [
+                    {
+                        "description": "Payload of login user",
+                        "name": "request",
+                        "in": "body",
+                        "required": true,
+                        "schema": {
+                            "$ref": "#/definitions/types.LoginUserPayload"
+                        }
+                    }
+                ],
+                "responses": {
+                    "200": {
+                        "description": "Token",
+                        "schema": {
+                            "$ref": "#/definitions/types.TokenResponse"
+                        }
+                    },
+                    "400": {
+                        "description": "Invalid payload [errors]",
+                        "schema": {
+                            "$ref": "#/definitions/types.ErrorLoginResponse"
+                        }
+                    }
+                }
+            }
+        },
+        "/api/v1/register": {
+            "post": {
+                "description": "Register with credentials",
+                "consumes": [
+                    "application/json"
+                ],
+                "produces": [
+                    "application/json"
+                ],
+                "tags": [
+                    "User"
+                ],
+                "summary": "Register a new account",
+                "parameters": [
+                    {
+                        "description": "Payload of regiseter user account",
+                        "name": "request",
+                        "in": "body",
+                        "required": true,
+                        "schema": {
+                            "$ref": "#/definitions/types.RegisterUserPayload"
+                        }
+                    }
+                ],
+                "responses": {
+                    "400": {
+                        "description": "Email already exists",
+                        "schema": {
+                            "$ref": "#/definitions/types.ErrorEmailAlreadyExists"
+                        }
+                    }
+                }
+            }
+        }
+    },
+    "definitions": {
+        "types.ErrorEmailAlreadyExists": {
+            "type": "object",
+            "properties": {
+                "error": {
+                    "type": "string",
+                    "example": "user with email dummy@gmail.com already exists"
+                }
+            }
+        },
+        "types.ErrorLoginResponse": {
+            "type": "object",
+            "properties": {
+                "error": {
+                    "type": "string",
+                    "example": "invalid payload.../ not found, invalid email or password / password does not correct, please retry!"
+                }
+            }
+        },
+        "types.LoginUserPayload": {
+            "type": "object",
+            "required": [
+                "email",
+                "password"
+            ],
+            "properties": {
+                "email": {
+                    "type": "string",
+                    "example": "dummy@gmail.com"
+                },
+                "password": {
+                    "type": "string",
+                    "example": "dummy_password"
+                }
+            }
+        },
+        "types.RegisterUserPayload": {
+            "type": "object",
+            "required": [
+                "email",
+                "firstName",
+                "lastName",
+                "password"
+            ],
+            "properties": {
+                "email": {
+                    "type": "string",
+                    "example": "dummy@gmail.com"
+                },
+                "firstName": {
+                    "type": "string",
+                    "example": "Hello"
+                },
+                "lastName": {
+                    "type": "string",
+                    "example": "World"
+                },
+                "password": {
+                    "type": "string",
+                    "maxLength": 130,
+                    "minLength": 3,
+                    "example": "dummy_password"
+                }
+            }
+        },
+        "types.TokenResponse": {
+            "type": "object",
+            "properties": {
+                "token": {
+                    "type": "string",
+                    "example": "eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJleHBpcmVkQXQiOjE3MTQ0OTg5NjIsInVzZXJJZCI6IjEifQ.CR4IsRNZ52W7FEuMNFTSTpHR8LlcHw3S8t9VPf0JnnA"
+                }
+            }
+        }
+    },
+    "securityDefinitions": {
+        "Bearer": {
+            "type": "apiKey",
+            "name": "Authorization",
+            "in": "header"
+        }
+    }
+}

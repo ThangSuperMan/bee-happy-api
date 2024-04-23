@@ -1,0 +1,119 @@
+definitions:
+  types.ErrorEmailAlreadyExists:
+    properties:
+      error:
+        example: user with email dummy@gmail.com already exists
+        type: string
+    type: object
+  types.ErrorLoginResponse:
+    properties:
+      error:
+        example: invalid payload.../ not found, invalid email or password / password
+          does not correct, please retry!
+        type: string
+    type: object
+  types.LoginUserPayload:
+    properties:
+      email:
+        example: dummy@gmail.com
+        type: string
+      password:
+        example: dummy_password
+        type: string
+    required:
+    - email
+    - password
+    type: object
+  types.RegisterUserPayload:
+    properties:
+      email:
+        example: dummy@gmail.com
+        type: string
+      firstName:
+        example: Hello
+        type: string
+      lastName:
+        example: World
+        type: string
+      password:
+        example: dummy_password
+        maxLength: 130
+        minLength: 3
+        type: string
+    required:
+    - email
+    - firstName
+    - lastName
+    - password
+    type: object
+  types.TokenResponse:
+    properties:
+      token:
+        example: eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJleHBpcmVkQXQiOjE3MTQ0OTg5NjIsInVzZXJJZCI6IjEifQ.CR4IsRNZ52W7FEuMNFTSTpHR8LlcHw3S8t9VPf0JnnA
+        type: string
+    type: object
+host: localhost:3000
+info:
+  contact:
+    email: thanglearndevops@gmail.com
+    name: Thang Phan
+    url: http://thangphan.com
+  description: Manage feeds, chat with fiends. It also provides endpoints for searching
+    feed by keyword
+  title: Bee happy API
+  version: "1.0"
+paths:
+  /api/v1/login:
+    post:
+      consumes:
+      - application/json
+      description: Login by email and password
+      parameters:
+      - description: Payload of login user
+        in: body
+        name: request
+        required: true
+        schema:
+          $ref: '#/definitions/types.LoginUserPayload'
+      produces:
+      - application/json
+      responses:
+        "200":
+          description: Token
+          schema:
+            $ref: '#/definitions/types.TokenResponse'
+        "400":
+          description: Invalid payload [errors]
+          schema:
+            $ref: '#/definitions/types.ErrorLoginResponse'
+      summary: Login
+      tags:
+      - User
+  /api/v1/register:
+    post:
+      consumes:
+      - application/json
+      description: Register with credentials
+      parameters:
+      - description: Payload of regiseter user account
+        in: body
+        name: request
+        required: true
+        schema:
+          $ref: '#/definitions/types.RegisterUserPayload'
+      produces:
+      - application/json
+      responses:
+        "400":
+          description: Email already exists
+          schema:
+            $ref: '#/definitions/types.ErrorEmailAlreadyExists'
+      summary: Register a new account
+      tags:
+      - User
+securityDefinitions:
+  Bearer:
+    in: header
+    name: Authorization
+    type: apiKey
+swagger: "2.0"

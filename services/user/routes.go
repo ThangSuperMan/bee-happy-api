@@ -26,6 +26,16 @@ func (h *Handler) RegisterRoutes(router *mux.Router) {
 	router.HandleFunc("/register", h.handleRegister).Methods("POST")
 }
 
+// handleLogin   Login
+// @Summary		   Login
+// @Description  Login by email and password
+// @Tags			   User
+// @Accept			 json
+// @Produce		   json
+// @Param        request body types.LoginUserPayload true "Payload of login user"
+// @Success		   200 {object} types.TokenResponse "Token"
+// @Failure		   400 {object} types.ErrorLoginResponse  "Invalid payload [errors]"
+// @Router			 /api/v1/login [post]
 func (h *Handler) handleLogin(w http.ResponseWriter, r *http.Request) {
 	var payload types.LoginUserPayload
 	if err := utils.ParseJSON(r, &payload); err != nil {
@@ -60,6 +70,15 @@ func (h *Handler) handleLogin(w http.ResponseWriter, r *http.Request) {
 	utils.WriteJSON(w, http.StatusOK, map[string]string{"token": token})
 }
 
+// handleLogin   Register
+// @Summary		   Register a new account
+// @Description  Register with credentials
+// @Tags			   User
+// @Accept			 json
+// @Produce		   json
+// @Param        request body types.RegisterUserPayload true "Payload of register user account"
+// @Failure		   400 {object} types.ErrorEmailAlreadyExists "Email already exists"
+// @Router			 /api/v1/register [post]
 func (h *Handler) handleRegister(w http.ResponseWriter, r *http.Request) {
 	var payload types.RegisterUserPayload
 	if err := utils.ParseJSON(r, &payload); err != nil {

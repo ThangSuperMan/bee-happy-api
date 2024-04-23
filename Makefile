@@ -7,6 +7,9 @@ test:
 run: build
 	@./bin/bee-happy-api
 
+api-docs:
+	@swag init -g ./cmd/main.go -o ./docs
+
 migration:
 	@migrate create -ext sql -dir cmd/migrate/migrations $(filter-out $@,$(MAKECMDGOALS))
 
