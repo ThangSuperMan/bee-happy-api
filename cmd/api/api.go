@@ -7,6 +7,8 @@ import (
 
 	"github.com/gorilla/mux"
 	httpSwagger "github.com/swaggo/http-swagger"
+	"github.com/thangsuperman/bee-happy/services/post"
+	"github.com/thangsuperman/bee-happy/services/upload"
 	"github.com/thangsuperman/bee-happy/services/user"
 )
 
@@ -29,6 +31,13 @@ func (s *APIServer) Run() error {
 	userStore := user.NewStore(s.db)
 	userHandler := user.NewHandler(userStore)
 	userHandler.RegisterRoutes(subrouter)
+
+	postStore := post.NewStore(s.db)
+	postHandler := post.NewHandler(postStore, userStore)
+	postHandler.RegisterRoutes(subrouter)
+
+	uploadHandler := upload.NewHandler(userStore)
+	uploadHandler.RegisterRoutes(subrouter)
 
 	router.PathPrefix("/swagger").Handler(httpSwagger.Handler(
 		httpSwagger.URL("http://localhost:3000/swagger/doc.json"),

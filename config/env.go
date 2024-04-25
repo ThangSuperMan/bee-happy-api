@@ -17,6 +17,10 @@ type Config struct {
 	DBName                 string
 	JWTSecret              string
 	JWTExpirationInSeconds int64
+	AWSRegion              string
+	AWSBucketAccessKey     string
+	AWSBucketSecretKey     string
+	AWSBucketName          string
 }
 
 var Envs = initConfig()
@@ -33,6 +37,10 @@ func initConfig() Config {
 		DBName:                 getEnv("DB_NAME", "dev"),
 		JWTSecret:              getEnv("JWT_SECRET", "secret123"),
 		JWTExpirationInSeconds: getEnvAsInt("JWT_EXP", 3600*24*7),
+		AWSRegion:              getEnv("AWS_REGION", "ap-southeast-1"),
+		AWSBucketAccessKey:     getEnv("AWS_BUCKET_ACCESS_KEY", "ap-southeast-1"),
+		AWSBucketSecretKey:     getEnv("AWS_BUCKET_SECRET_KEY", "ap-southeast-1"),
+		AWSBucketName:          getEnv("AWS_BUCKET_NAME", "bee_happy_bucket"),
 	}
 }
 

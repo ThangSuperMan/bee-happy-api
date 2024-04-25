@@ -59,6 +59,38 @@ const docTemplate = `{
                 }
             }
         },
+        "/api/v1/post/upload": {
+            "post": {
+                "description": "Upload an image for the post",
+                "consumes": [
+                    "application/json"
+                ],
+                "produces": [
+                    "application/json"
+                ],
+                "tags": [
+                    "Post"
+                ],
+                "summary": "Upload image",
+                "parameters": [
+                    {
+                        "type": "file",
+                        "description": "Image file to upload",
+                        "name": "file",
+                        "in": "formData",
+                        "required": true
+                    }
+                ],
+                "responses": {
+                    "200": {
+                        "description": "OK",
+                        "schema": {
+                            "$ref": "#/definitions/types.BaseResponse"
+                        }
+                    }
+                }
+            }
+        },
         "/api/v1/register": {
             "post": {
                 "description": "Register with credentials",
@@ -74,7 +106,7 @@ const docTemplate = `{
                 "summary": "Register a new account",
                 "parameters": [
                     {
-                        "description": "Payload of regiseter user account",
+                        "description": "Payload of register user account",
                         "name": "request",
                         "in": "body",
                         "required": true,
@@ -95,6 +127,15 @@ const docTemplate = `{
         }
     },
     "definitions": {
+        "types.BaseResponse": {
+            "type": "object",
+            "properties": {
+                "message": {
+                    "type": "string"
+                },
+                "metadata": {}
+            }
+        },
         "types.ErrorEmailAlreadyExists": {
             "type": "object",
             "properties": {

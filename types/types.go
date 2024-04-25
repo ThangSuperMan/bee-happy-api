@@ -1,11 +1,31 @@
 package types
 
-import "time"
+import (
+	"time"
+)
 
 type UserStore interface {
 	GetUserByEmail(email string) (*User, error)
 	GetUserByID(id int) (*User, error)
 	CreateUser(user User) error
+}
+
+type PostStore interface {
+	GetPosts() ([]Post, error)
+}
+
+type BaseResponse struct {
+	Message  string `json:"message"`
+	Metadata any    `json:"metadata"`
+}
+
+type Post struct {
+	ID        int       `json:"id"`
+	Title     string    `json:"title"`
+	Content   string    `json:"content"`
+	ImageURL  string    `json:"imageUrl"`
+	CreatedAt time.Time `json:"createdAt"`
+	UpdatedAt time.Time `json:"updatedAt "`
 }
 
 type User struct {
@@ -28,10 +48,6 @@ type LoginUserPayload struct {
 	Email    string `json:"email" validate:"required,email" example:"dummy@gmail.com"`
 	Password string `json:"password" validate:"required" example:"dummy_password"`
 }
-
-//
-// Types response for Swagger
-//
 
 type TokenResponse struct {
 	Token string `json:"token" example:"eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJleHBpcmVkQXQiOjE3MTQ0OTg5NjIsInVzZXJJZCI6IjEifQ.CR4IsRNZ52W7FEuMNFTSTpHR8LlcHw3S8t9VPf0JnnA"`

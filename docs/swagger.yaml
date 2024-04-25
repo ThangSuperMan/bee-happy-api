@@ -1,4 +1,10 @@
 definitions:
+  types.BaseResponse:
+    properties:
+      message:
+        type: string
+      metadata: {}
+    type: object
   types.ErrorEmailAlreadyExists:
     properties:
       error:
@@ -89,13 +95,34 @@ paths:
       summary: Login
       tags:
       - User
+  /api/v1/post/upload:
+    post:
+      consumes:
+      - application/json
+      description: Upload an image for the post
+      parameters:
+      - description: Image file to upload
+        in: formData
+        name: file
+        required: true
+        type: file
+      produces:
+      - application/json
+      responses:
+        "200":
+          description: OK
+          schema:
+            $ref: '#/definitions/types.BaseResponse'
+      summary: Upload image
+      tags:
+      - Post
   /api/v1/register:
     post:
       consumes:
       - application/json
       description: Register with credentials
       parameters:
-      - description: Payload of regiseter user account
+      - description: Payload of register user account
         in: body
         name: request
         required: true

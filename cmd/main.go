@@ -6,7 +6,7 @@ import (
 
 	"github.com/go-sql-driver/mysql"
 	"github.com/thangsuperman/bee-happy/cmd/api"
-	"github.com/thangsuperman/bee-happy/config"
+	AppSetting "github.com/thangsuperman/bee-happy/config"
 	"github.com/thangsuperman/bee-happy/db"
 	_ "github.com/thangsuperman/bee-happy/docs"
 )
@@ -24,10 +24,10 @@ import (
 // @BasePath					          /
 func main() {
 	db, err := db.NewMySQLStorage(mysql.Config{
-		User:                 config.Envs.DBUser,
-		Passwd:               config.Envs.DBPassword,
-		Addr:                 config.Envs.PublicHost,
-		DBName:               config.Envs.DBName,
+		User:                 AppSetting.Envs.DBUser,
+		Passwd:               AppSetting.Envs.DBPassword,
+		Addr:                 AppSetting.Envs.PublicHost,
+		DBName:               AppSetting.Envs.DBName,
 		Net:                  "tcp",
 		AllowNativePasswords: true,
 		ParseTime:            true,

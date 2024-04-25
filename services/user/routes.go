@@ -43,7 +43,6 @@ func (h *Handler) handleLogin(w http.ResponseWriter, r *http.Request) {
 		return
 	}
 
-	// TODO: this should move to the auto inject middleware
 	if err := utils.Validate.Struct(payload); err != nil {
 		errors := err.(validator.ValidationErrors)
 		utils.WriteError(w, http.StatusBadRequest, fmt.Errorf("invalid payload %w", errors))
@@ -68,7 +67,10 @@ func (h *Handler) handleLogin(w http.ResponseWriter, r *http.Request) {
 		return
 	}
 
-	utils.WriteJSON(w, http.StatusOK, map[string]string{"token": token})
+	utils.WriteJSON(w, http.StatusOK, types.BaseResponse{
+		Message:  "Login successfully",
+		Metadata: map[string]string{"token": token},
+	})
 }
 
 // handleLogin   Register
@@ -115,5 +117,8 @@ func (h *Handler) handleRegister(w http.ResponseWriter, r *http.Request) {
 		utils.WriteError(w, http.StatusInternalServerError, err)
 	}
 
-	utils.WriteJSON(w, http.StatusCreated, nil)
+	utils.WriteJSON(w, http.StatusCreated, types.BaseResponse{
+		Message:  "Register successfully",
+		Metadata: nil,
+	})
 }
