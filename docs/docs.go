@@ -29,7 +29,7 @@ const docTemplate = `{
                     "application/json"
                 ],
                 "tags": [
-                    "User"
+                    "Auth"
                 ],
                 "summary": "Login",
                 "parameters": [
@@ -47,7 +47,7 @@ const docTemplate = `{
                     "200": {
                         "description": "Token",
                         "schema": {
-                            "$ref": "#/definitions/types.TokenResponse"
+                            "$ref": "#/definitions/types.BaseResponse"
                         }
                     },
                     "400": {
@@ -59,9 +59,9 @@ const docTemplate = `{
                 }
             }
         },
-        "/api/v1/post/upload": {
+        "/api/v1/post": {
             "post": {
-                "description": "Upload an image for the post",
+                "description": "Create a new post",
                 "consumes": [
                     "application/json"
                 ],
@@ -71,19 +71,99 @@ const docTemplate = `{
                 "tags": [
                     "Post"
                 ],
-                "summary": "Upload image",
+                "summary": "Create a new post",
                 "parameters": [
                     {
-                        "type": "file",
-                        "description": "Image file to upload",
-                        "name": "file",
-                        "in": "formData",
+                        "type": "string",
+                        "description": "JWT Token",
+                        "name": "Authorization",
+                        "in": "header",
                         "required": true
+                    },
+                    {
+                        "description": "Post payload",
+                        "name": "payload",
+                        "in": "body",
+                        "required": true,
+                        "schema": {
+                            "$ref": "#/definitions/types.CreatePostPayload"
+                        }
                     }
                 ],
                 "responses": {
                     "200": {
-                        "description": "OK",
+                        "description": "Success",
+                        "schema": {
+                            "$ref": "#/definitions/types.BaseResponse"
+                        }
+                    }
+                }
+            }
+        },
+        "/api/v1/post/{id}": {
+            "patch": {
+                "description": "Create a new post",
+                "consumes": [
+                    "application/json"
+                ],
+                "produces": [
+                    "application/json"
+                ],
+                "tags": [
+                    "Post"
+                ],
+                "summary": "Update a post",
+                "parameters": [
+                    {
+                        "type": "string",
+                        "description": "JWT Token",
+                        "name": "Authorization",
+                        "in": "header",
+                        "required": true
+                    },
+                    {
+                        "type": "string",
+                        "description": "Post ID",
+                        "name": "id",
+                        "in": "path",
+                        "required": true
+                    },
+                    {
+                        "description": "Post payload",
+                        "name": "payload",
+                        "in": "body",
+                        "required": true,
+                        "schema": {
+                            "$ref": "#/definitions/types.UpdatePostPayload"
+                        }
+                    }
+                ],
+                "responses": {
+                    "200": {
+                        "description": "Success",
+                        "schema": {
+                            "$ref": "#/definitions/types.BaseResponse"
+                        }
+                    }
+                }
+            }
+        },
+        "/api/v1/posts": {
+            "get": {
+                "description": "Create a new post",
+                "consumes": [
+                    "application/json"
+                ],
+                "produces": [
+                    "application/json"
+                ],
+                "tags": [
+                    "Post"
+                ],
+                "summary": "Get all posts",
+                "responses": {
+                    "200": {
+                        "description": "Success",
                         "schema": {
                             "$ref": "#/definitions/types.BaseResponse"
                         }
@@ -101,7 +181,7 @@ const docTemplate = `{
                     "application/json"
                 ],
                 "tags": [
-                    "User"
+                    "Auth"
                 ],
                 "summary": "Register a new account",
                 "parameters": [
@@ -124,6 +204,45 @@ const docTemplate = `{
                     }
                 }
             }
+        },
+        "/api/v1/upload": {
+            "post": {
+                "description": "Upload an image for the post/profile",
+                "consumes": [
+                    "application/json"
+                ],
+                "produces": [
+                    "application/json"
+                ],
+                "tags": [
+                    "Upload"
+                ],
+                "summary": "Upload image",
+                "parameters": [
+                    {
+                        "type": "string",
+                        "description": "JWT Token",
+                        "name": "Authorization",
+                        "in": "header",
+                        "required": true
+                    },
+                    {
+                        "type": "file",
+                        "description": "Image file to upload",
+                        "name": "file",
+                        "in": "formData",
+                        "required": true
+                    }
+                ],
+                "responses": {
+                    "200": {
+                        "description": "OK",
+                        "schema": {
+                            "$ref": "#/definitions/types.BaseResponse"
+                        }
+                    }
+                }
+            }
         }
     },
     "definitions": {
@@ -134,6 +253,27 @@ const docTemplate = `{
                     "type": "string"
                 },
                 "metadata": {}
+            }
+        },
+        "types.CreatePostPayload": {
+            "type": "object",
+            "required": [
+                "content",
+                "title"
+            ],
+            "properties": {
+                "content": {
+                    "type": "string",
+                    "example": "Good morning content"
+                },
+                "imageUrl": {
+                    "type": "string",
+                    "example": "https://bee-happy-bucket-storage.s3.ap-southeast-1.amazonaws.com/2024-04-25_17-05-00-lisa.jpeg"
+                },
+                "title": {
+                    "type": "string",
+                    "example": "Good morning"
+                }
             }
         },
         "types.ErrorEmailAlreadyExists": {
@@ -200,12 +340,20 @@ const docTemplate = `{
                 }
             }
         },
-        "types.TokenResponse": {
+        "types.UpdatePostPayload": {
             "type": "object",
             "properties": {
-                "token": {
+                "content": {
                     "type": "string",
-                    "example": "eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJleHBpcmVkQXQiOjE3MTQ0OTg5NjIsInVzZXJJZCI6IjEifQ.CR4IsRNZ52W7FEuMNFTSTpHR8LlcHw3S8t9VPf0JnnA"
+                    "example": "Good morning content"
+                },
+                "imageUrl": {
+                    "type": "string",
+                    "example": "https://bee-happy-bucket-storage.s3.ap-southeast-1.amazonaws.com/2024-04-25_17-05-00-lisa.jpeg"
+                },
+                "title": {
+                    "type": "string",
+                    "example": "Good morning"
                 }
             }
         }

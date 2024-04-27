@@ -3,6 +3,7 @@ package post
 import (
 	"database/sql"
 	"github.com/thangsuperman/bee-happy/types"
+	"strings"
 )
 
 type Store struct {
@@ -13,14 +14,63 @@ func newStore(db *sql.DB) *Store {
 	return &Store{db: db}
 }
 
+func (s *Store) CreatePost(post types.CreatePostPayload, authorId int) error {
+	if post.ImageURL == "" {
+		insertQuery := "INSERT INTO posts(title, content, author_id) VALUES (?, ?, ?)"
+		_, err := s.db.Exec(insertQuery, post.Title, post.Content, authorId)
+		if err != nil {
+			return err
+		}
+	} else {
+		insertQuery := "INSERT INTO posts(title, content, image_url, author_id) VALUES (?, ?, ?, ?)"
+		_, err := s.db.Exec(insertQuery, post.Title, post.Content, post.ImageURL, authorId)
+		if err != nil {
+			return err
+		}
+	}
+
+	return nil
+}
+
+func (s *Store) UpdatePost(payload types.UpdatePostPayload, postId int, authorId int) error {
+	updateQuery := "UPDATE posts SET "
+	var params []interface{}
+
+	if payload.Title != "" {
+		updateQuery += "title = ?, "
+		params = append(params, payload.Title)
+	}
+
+	if payload.Content != "" {
+		updateQuery += "content = ?, "
+		params = append(params, payload.Content)
+	}
+
+	if payload.ImageURL != "" {
+		updateQuery += "image_url = ?, "
+		params = append(params, payload.ImageURL)
+	}
+
+	updateQuery = strings.TrimSuffix(updateQuery, ", ")
+	updateQuery += " WHERE id = ? AND author_id = ?"
+	params = append(params, postId, authorId)
+
+	_, err := s.db.Exec(updateQuery, params...)
+	if err != nil {
+		return err
+	}
+	return nil
+}
+
 func (s *Store) GetPosts() ([]types.Post, error) {
 	rows, err := s.db.Query("SELECT * FROM posts")
 	if err != nil {
 		return nil, err
 	}
+	defer rows.Close()
 
 	posts := make([]types.Post, 0)
-	if rows.Next() {
+	for rows.Next() {
 		p, err := scanRowsIntoPost(rows)
 		if err != nil {
 			return nil, err
@@ -30,6 +80,7 @@ func (s *Store) GetPosts() ([]types.Post, error) {
 	}
 
 	return posts, nil
+
 }
 
 func NewStore(db *sql.DB) *Store {
@@ -44,6 +95,7 @@ func scanRowsIntoPost(rows *sql.Rows) (*types.Post, error) {
 		&post.Title,
 		&post.Content,
 		&post.ImageURL,
+		&post.AuthorId,
 		&post.CreatedAt,
 		&post.UpdatedAt,
 	)

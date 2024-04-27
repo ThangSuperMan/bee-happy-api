@@ -28,18 +28,19 @@ func NewHandler(store types.UserStore) *Handler {
 }
 
 func (h *Handler) RegisterRoutes(router *mux.Router) {
-	router.HandleFunc("/post/upload", auth.WithJWTAuth(h.handleUploadImage, h.store))
+	router.HandleFunc("/upload", auth.WithJWTAuth(h.handleUploadImage, h.store))
 }
 
 // handleUploadImage  Login
 // @Summary		        Upload image
-// @Description       Upload an image for the post
-// @Tags			        Post
+// @Description       Upload an image for the post/profile
+// @Tags			        Upload
 // @Accept			      json
 // @Produce		        json
+// @Param Authorization header string true "JWT Token"
 // @Param             file formData file true "Image file to upload"
 // @Success		        200 {object} types.BaseResponse
-// @Router			      /api/v1/post/upload [post]
+// @Router			      /api/v1/upload [post]
 func (h *Handler) handleUploadImage(w http.ResponseWriter, r *http.Request) {
 	file, header, err := r.FormFile("file")
 	if err != nil {
@@ -85,5 +86,5 @@ func (h *Handler) handleUploadImage(w http.ResponseWriter, r *http.Request) {
 func generateFilename(originalFilename string) string {
 	timestamp := time.Now().UTC().Format("2006-01-02_15-04-05")
 	ext := filepath.Ext(originalFilename)
-	return fmt.Sprintf("%s-%s%s", timestamp, originalFilename[:len(originalFilename)-len(ext)], ext)
+	return fmt.Sprintf("%s_%s%s", timestamp, originalFilename[:len(originalFilename)-len(ext)], ext)
 }

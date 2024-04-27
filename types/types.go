@@ -12,6 +12,8 @@ type UserStore interface {
 
 type PostStore interface {
 	GetPosts() ([]Post, error)
+	CreatePost(post CreatePostPayload, authorId int) error
+	UpdatePost(post UpdatePostPayload, postId int, authorId int) error
 }
 
 type BaseResponse struct {
@@ -24,6 +26,7 @@ type Post struct {
 	Title     string    `json:"title"`
 	Content   string    `json:"content"`
 	ImageURL  string    `json:"imageUrl"`
+	AuthorId  string    `json:"author_id"`
 	CreatedAt time.Time `json:"createdAt"`
 	UpdatedAt time.Time `json:"updatedAt "`
 }
@@ -37,6 +40,18 @@ type User struct {
 	CreatedAt time.Time `json:"createdAt"`
 }
 
+type UpdatePostPayload struct {
+	Title    string `json:"title" example:"Good morning"`
+	Content  string `json:"content" example:"Good morning content"`
+	ImageURL string `json:"imageUrl" example:"https://bee-happy-bucket-storage.s3.ap-southeast-1.amazonaws.com/2024-04-25_17-05-00-lisa.jpeg"`
+}
+
+type CreatePostPayload struct {
+	Title    string `json:"title" validate:"required" example:"Good morning"`
+	Content  string `json:"content" validate:"required" example:"Good morning content"`
+	ImageURL string `json:"imageUrl" validate:"url" example:"https://bee-happy-bucket-storage.s3.ap-southeast-1.amazonaws.com/2024-04-25_17-05-00-lisa.jpeg"`
+}
+
 type RegisterUserPayload struct {
 	FirstName string `json:"firstName" validate:"required" example:"Hello"`
 	LastName  string `json:"lastName" validate:"required" example:"World"`
@@ -47,10 +62,6 @@ type RegisterUserPayload struct {
 type LoginUserPayload struct {
 	Email    string `json:"email" validate:"required,email" example:"dummy@gmail.com"`
 	Password string `json:"password" validate:"required" example:"dummy_password"`
-}
-
-type TokenResponse struct {
-	Token string `json:"token" example:"eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJleHBpcmVkQXQiOjE3MTQ0OTg5NjIsInVzZXJJZCI6IjEifQ.CR4IsRNZ52W7FEuMNFTSTpHR8LlcHw3S8t9VPf0JnnA"`
 }
 
 type ErrorLoginResponse struct {

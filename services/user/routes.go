@@ -29,11 +29,11 @@ func (h *Handler) RegisterRoutes(router *mux.Router) {
 // handleLogin   Login
 // @Summary		   Login
 // @Description  Login by email and password
-// @Tags			   User
+// @Tags			   Auth
 // @Accept			 json
 // @Produce		   json
 // @Param        request body types.LoginUserPayload true "Payload of login user"
-// @Success		   200 {object} types.TokenResponse "Token"
+// @Success		   200 {object} types.BaseResponse "Token"
 // @Failure		   400 {object} types.ErrorLoginResponse  "Invalid payload [errors]"
 // @Router			 /api/v1/login [post]
 func (h *Handler) handleLogin(w http.ResponseWriter, r *http.Request) {
@@ -76,7 +76,7 @@ func (h *Handler) handleLogin(w http.ResponseWriter, r *http.Request) {
 // handleLogin   Register
 // @Summary		   Register a new account
 // @Description  Register with credentials
-// @Tags			   User
+// @Tags			   Auth
 // @Accept			 json
 // @Produce		   json
 // @Param        request body types.RegisterUserPayload true "Payload of register user account"

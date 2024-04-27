@@ -5,6 +5,21 @@ definitions:
         type: string
       metadata: {}
     type: object
+  types.CreatePostPayload:
+    properties:
+      content:
+        example: Good morning content
+        type: string
+      imageUrl:
+        example: https://bee-happy-bucket-storage.s3.ap-southeast-1.amazonaws.com/2024-04-25_17-05-00-lisa.jpeg
+        type: string
+      title:
+        example: Good morning
+        type: string
+    required:
+    - content
+    - title
+    type: object
   types.ErrorEmailAlreadyExists:
     properties:
       error:
@@ -52,10 +67,16 @@ definitions:
     - lastName
     - password
     type: object
-  types.TokenResponse:
+  types.UpdatePostPayload:
     properties:
-      token:
-        example: eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJleHBpcmVkQXQiOjE3MTQ0OTg5NjIsInVzZXJJZCI6IjEifQ.CR4IsRNZ52W7FEuMNFTSTpHR8LlcHw3S8t9VPf0JnnA
+      content:
+        example: Good morning content
+        type: string
+      imageUrl:
+        example: https://bee-happy-bucket-storage.s3.ap-southeast-1.amazonaws.com/2024-04-25_17-05-00-lisa.jpeg
+        type: string
+      title:
+        example: Good morning
         type: string
     type: object
 host: localhost:3000
@@ -87,33 +108,86 @@ paths:
         "200":
           description: Token
           schema:
-            $ref: '#/definitions/types.TokenResponse'
+            $ref: '#/definitions/types.BaseResponse'
         "400":
           description: Invalid payload [errors]
           schema:
             $ref: '#/definitions/types.ErrorLoginResponse'
       summary: Login
       tags:
-      - User
-  /api/v1/post/upload:
+      - Auth
+  /api/v1/post:
     post:
       consumes:
       - application/json
-      description: Upload an image for the post
+      description: Create a new post
       parameters:
-      - description: Image file to upload
-        in: formData
-        name: file
+      - description: JWT Token
+        in: header
+        name: Authorization
         required: true
-        type: file
+        type: string
+      - description: Post payload
+        in: body
+        name: payload
+        required: true
+        schema:
+          $ref: '#/definitions/types.CreatePostPayload'
       produces:
       - application/json
       responses:
         "200":
-          description: OK
+          description: Success
           schema:
             $ref: '#/definitions/types.BaseResponse'
-      summary: Upload image
+      summary: Create a new post
+      tags:
+      - Post
+  /api/v1/post/{id}:
+    patch:
+      consumes:
+      - application/json
+      description: Create a new post
+      parameters:
+      - description: JWT Token
+        in: header
+        name: Authorization
+        required: true
+        type: string
+      - description: Post ID
+        in: path
+        name: id
+        required: true
+        type: string
+      - description: Post payload
+        in: body
+        name: payload
+        required: true
+        schema:
+          $ref: '#/definitions/types.UpdatePostPayload'
+      produces:
+      - application/json
+      responses:
+        "200":
+          description: Success
+          schema:
+            $ref: '#/definitions/types.BaseResponse'
+      summary: Update a post
+      tags:
+      - Post
+  /api/v1/posts:
+    get:
+      consumes:
+      - application/json
+      description: Create a new post
+      produces:
+      - application/json
+      responses:
+        "200":
+          description: Success
+          schema:
+            $ref: '#/definitions/types.BaseResponse'
+      summary: Get all posts
       tags:
       - Post
   /api/v1/register:
@@ -137,7 +211,33 @@ paths:
             $ref: '#/definitions/types.ErrorEmailAlreadyExists'
       summary: Register a new account
       tags:
-      - User
+      - Auth
+  /api/v1/upload:
+    post:
+      consumes:
+      - application/json
+      description: Upload an image for the post/profile
+      parameters:
+      - description: JWT Token
+        in: header
+        name: Authorization
+        required: true
+        type: string
+      - description: Image file to upload
+        in: formData
+        name: file
+        required: true
+        type: file
+      produces:
+      - application/json
+      responses:
+        "200":
+          description: OK
+          schema:
+            $ref: '#/definitions/types.BaseResponse'
+      summary: Upload image
+      tags:
+      - Upload
 securityDefinitions:
   Bearer:
     in: header

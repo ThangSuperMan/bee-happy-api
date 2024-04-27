@@ -69,7 +69,6 @@ func main() {
 			log.Fatal("Can not force through the migration error at version ", currentVersion)
 		}
 
-		fmt.Println("Let's force")
 		err = m.Force(int(targetVersion))
 		utils.HaltOn(err)
 
