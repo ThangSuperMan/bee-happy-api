@@ -10,7 +10,7 @@ definitions:
       content:
         example: Good morning content
         type: string
-      imageUrl:
+      image_url:
         example: https://bee-happy-bucket-storage.s3.ap-southeast-1.amazonaws.com/2024-04-25_17-05-00-lisa.jpeg
         type: string
       title:
@@ -47,13 +47,16 @@ definitions:
     type: object
   types.RegisterUserPayload:
     properties:
+      date_of_birth:
+        example: "2006-01-02"
+        type: string
       email:
         example: dummy@gmail.com
         type: string
-      firstName:
+      first_name:
         example: Hello
         type: string
-      lastName:
+      last_name:
         example: World
         type: string
       password:
@@ -62,9 +65,10 @@ definitions:
         minLength: 3
         type: string
     required:
+    - date_of_birth
     - email
-    - firstName
-    - lastName
+    - first_name
+    - last_name
     - password
     type: object
   types.UpdatePostPayload:
@@ -72,7 +76,7 @@ definitions:
       content:
         example: Good morning content
         type: string
-      imageUrl:
+      image_url:
         example: https://bee-happy-bucket-storage.s3.ap-southeast-1.amazonaws.com/2024-04-25_17-05-00-lisa.jpeg
         type: string
       title:
@@ -144,10 +148,55 @@ paths:
       tags:
       - Post
   /api/v1/post/{id}:
+    delete:
+      consumes:
+      - application/json
+      description: Delete a post
+      parameters:
+      - description: JWT Token
+        in: header
+        name: Authorization
+        required: true
+        type: string
+      - description: Post ID
+        in: path
+        name: id
+        required: true
+        type: string
+      produces:
+      - application/json
+      responses:
+        "200":
+          description: Success
+          schema:
+            $ref: '#/definitions/types.BaseResponse'
+      summary: Delete a post
+      tags:
+      - Post
+    get:
+      consumes:
+      - application/json
+      description: Get a post by id
+      parameters:
+      - description: Post ID
+        in: path
+        name: id
+        required: true
+        type: string
+      produces:
+      - application/json
+      responses:
+        "200":
+          description: Success
+          schema:
+            $ref: '#/definitions/types.BaseResponse'
+      summary: Get a post
+      tags:
+      - Post
     patch:
       consumes:
       - application/json
-      description: Create a new post
+      description: Update a post
       parameters:
       - description: JWT Token
         in: header
@@ -179,7 +228,7 @@ paths:
     get:
       consumes:
       - application/json
-      description: Create a new post
+      description: Get all post
       produces:
       - application/json
       responses:

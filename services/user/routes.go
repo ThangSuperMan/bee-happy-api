@@ -108,10 +108,11 @@ func (h *Handler) handleRegister(w http.ResponseWriter, r *http.Request) {
 	}
 
 	err = h.store.CreateUser(types.User{
-		FirstName: payload.FirstName,
-		LastName:  payload.LastName,
-		Email:     payload.Email,
-		Password:  hashedPassword,
+		FirstName:   payload.FirstName,
+		LastName:    payload.LastName,
+		Email:       payload.Email,
+		DateOfBirth: payload.DateOfBirth,
+		Password:    hashedPassword,
 	})
 	if err != nil {
 		utils.WriteError(w, http.StatusInternalServerError, err)

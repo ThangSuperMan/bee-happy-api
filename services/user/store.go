@@ -13,7 +13,11 @@ type Store struct {
 }
 
 func (s *Store) CreateUser(user types.User) error {
-	_, err := s.db.Exec("INSERT INTO users (first_name, last_name, email, password) VALUES (?, ?, ?, ?)", user.FirstName, user.LastName, user.Email, user.Password)
+	_, err := s.db.Exec(`
+      INSERT INTO users (first_name, last_name, email, password, date_of_birth) 
+      VALUES (?, ?, ?, ?, ?)
+    `, user.FirstName, user.LastName, user.Email, user.Password, user.DateOfBirth)
+
 	utils.HaltOn(err)
 
 	return nil
@@ -36,11 +40,10 @@ func (s *Store) GetUserByID(id int) (*types.User, error) {
 	}
 
 	if u.ID == 0 {
-		return nil, fmt.Errorf("user not found")
+		return nil, fmt.Errorf("User not found")
 	}
 
 	return u, nil
-
 }
 
 func NewStore(db *sql.DB) *Store {
@@ -77,7 +80,9 @@ func scanRowsIntoUser(rows *sql.Rows) (*types.User, error) {
 		&user.LastName,
 		&user.Email,
 		&user.Password,
+		&user.DateOfBirth,
 		&user.CreatedAt,
+		&user.UpdatedAt,
 	)
 
 	if err != nil {

@@ -94,8 +94,75 @@
             }
         },
         "/api/v1/post/{id}": {
+            "get": {
+                "description": "Get a post by id",
+                "consumes": [
+                    "application/json"
+                ],
+                "produces": [
+                    "application/json"
+                ],
+                "tags": [
+                    "Post"
+                ],
+                "summary": "Get a post",
+                "parameters": [
+                    {
+                        "type": "string",
+                        "description": "Post ID",
+                        "name": "id",
+                        "in": "path",
+                        "required": true
+                    }
+                ],
+                "responses": {
+                    "200": {
+                        "description": "Success",
+                        "schema": {
+                            "$ref": "#/definitions/types.BaseResponse"
+                        }
+                    }
+                }
+            },
+            "delete": {
+                "description": "Delete a post",
+                "consumes": [
+                    "application/json"
+                ],
+                "produces": [
+                    "application/json"
+                ],
+                "tags": [
+                    "Post"
+                ],
+                "summary": "Delete a post",
+                "parameters": [
+                    {
+                        "type": "string",
+                        "description": "JWT Token",
+                        "name": "Authorization",
+                        "in": "header",
+                        "required": true
+                    },
+                    {
+                        "type": "string",
+                        "description": "Post ID",
+                        "name": "id",
+                        "in": "path",
+                        "required": true
+                    }
+                ],
+                "responses": {
+                    "200": {
+                        "description": "Success",
+                        "schema": {
+                            "$ref": "#/definitions/types.BaseResponse"
+                        }
+                    }
+                }
+            },
             "patch": {
-                "description": "Create a new post",
+                "description": "Update a post",
                 "consumes": [
                     "application/json"
                 ],
@@ -143,7 +210,7 @@
         },
         "/api/v1/posts": {
             "get": {
-                "description": "Create a new post",
+                "description": "Get all post",
                 "consumes": [
                     "application/json"
                 ],
@@ -259,7 +326,7 @@
                     "type": "string",
                     "example": "Good morning content"
                 },
-                "imageUrl": {
+                "image_url": {
                     "type": "string",
                     "example": "https://bee-happy-bucket-storage.s3.ap-southeast-1.amazonaws.com/2024-04-25_17-05-00-lisa.jpeg"
                 },
@@ -307,21 +374,26 @@
         "types.RegisterUserPayload": {
             "type": "object",
             "required": [
+                "date_of_birth",
                 "email",
-                "firstName",
-                "lastName",
+                "first_name",
+                "last_name",
                 "password"
             ],
             "properties": {
+                "date_of_birth": {
+                    "type": "string",
+                    "example": "2006-01-02"
+                },
                 "email": {
                     "type": "string",
                     "example": "dummy@gmail.com"
                 },
-                "firstName": {
+                "first_name": {
                     "type": "string",
                     "example": "Hello"
                 },
-                "lastName": {
+                "last_name": {
                     "type": "string",
                     "example": "World"
                 },
@@ -340,7 +412,7 @@
                     "type": "string",
                     "example": "Good morning content"
                 },
-                "imageUrl": {
+                "image_url": {
                     "type": "string",
                     "example": "https://bee-happy-bucket-storage.s3.ap-southeast-1.amazonaws.com/2024-04-25_17-05-00-lisa.jpeg"
                 },

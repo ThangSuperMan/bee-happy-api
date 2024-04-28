@@ -2,8 +2,10 @@ package post
 
 import (
 	"database/sql"
-	"github.com/thangsuperman/bee-happy/types"
+	"fmt"
 	"strings"
+
+	"github.com/thangsuperman/bee-happy/types"
 )
 
 type Store struct {
@@ -62,6 +64,23 @@ func (s *Store) UpdatePost(payload types.UpdatePostPayload, postId int, authorId
 	return nil
 }
 
+func (s *Store) GetPostById(postId int) (*types.Post, error) {
+	rows, err := s.db.Query("SELECT * FROM posts WHERE id = ?", postId)
+	p := new(types.Post)
+	for rows.Next() {
+		p, err = scanRowsIntoPost(rows)
+		if err != nil {
+			return nil, err
+		}
+	}
+
+	if p.ID == 0 {
+		return nil, fmt.Errorf("Post not found")
+	}
+
+	return p, nil
+}
+
 func (s *Store) GetPosts() ([]types.Post, error) {
 	rows, err := s.db.Query("SELECT * FROM posts")
 	if err != nil {
@@ -80,7 +99,15 @@ func (s *Store) GetPosts() ([]types.Post, error) {
 	}
 
 	return posts, nil
+}
 
+func (s *Store) DeletePostById(postId int, authorId int) error {
+	_, err := s.db.Exec("DELETE FROM posts WHERE id = ? AND author_id = ?", postId, authorId)
+	if err != nil {
+		return err
+	}
+
+	return nil
 }
 
 func NewStore(db *sql.DB) *Store {

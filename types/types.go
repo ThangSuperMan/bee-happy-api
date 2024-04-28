@@ -12,8 +12,10 @@ type UserStore interface {
 
 type PostStore interface {
 	GetPosts() ([]Post, error)
+	GetPostById(postId int) (*Post, error)
 	CreatePost(post CreatePostPayload, authorId int) error
 	UpdatePost(post UpdatePostPayload, postId int, authorId int) error
+	DeletePostById(postId int, authorId int) error
 }
 
 type BaseResponse struct {
@@ -25,38 +27,41 @@ type Post struct {
 	ID        int       `json:"id"`
 	Title     string    `json:"title"`
 	Content   string    `json:"content"`
-	ImageURL  string    `json:"imageUrl"`
+	ImageURL  string    `json:"image_url"`
 	AuthorId  string    `json:"author_id"`
-	CreatedAt time.Time `json:"createdAt"`
-	UpdatedAt time.Time `json:"updatedAt "`
+	CreatedAt time.Time `json:"created_at"`
+	UpdatedAt time.Time `json:"updated_at "`
 }
 
 type User struct {
-	ID        int       `json:"id"`
-	Email     string    `json:"email"`
-	FirstName string    `json:"firstName"`
-	LastName  string    `json:"lastName"`
-	Password  string    `json:"-"`
-	CreatedAt time.Time `json:"createdAt"`
+	ID          int       `json:"id"`
+	Email       string    `json:"email"`
+	FirstName   string    `json:"first_name"`
+	LastName    string    `json:"last_name"`
+	Password    string    `json:"-"`
+	DateOfBirth string    `json:"date_of_birth" validate:"required,datetime"`
+	CreatedAt   time.Time `json:"created_at"`
+	UpdatedAt   time.Time `json:"updated_at"`
 }
 
 type UpdatePostPayload struct {
 	Title    string `json:"title" example:"Good morning"`
 	Content  string `json:"content" example:"Good morning content"`
-	ImageURL string `json:"imageUrl" example:"https://bee-happy-bucket-storage.s3.ap-southeast-1.amazonaws.com/2024-04-25_17-05-00-lisa.jpeg"`
+	ImageURL string `json:"image_url" example:"https://bee-happy-bucket-storage.s3.ap-southeast-1.amazonaws.com/2024-04-25_17-05-00-lisa.jpeg"`
 }
 
 type CreatePostPayload struct {
 	Title    string `json:"title" validate:"required" example:"Good morning"`
 	Content  string `json:"content" validate:"required" example:"Good morning content"`
-	ImageURL string `json:"imageUrl" validate:"url" example:"https://bee-happy-bucket-storage.s3.ap-southeast-1.amazonaws.com/2024-04-25_17-05-00-lisa.jpeg"`
+	ImageURL string `json:"image_url" validate:"url" example:"https://bee-happy-bucket-storage.s3.ap-southeast-1.amazonaws.com/2024-04-25_17-05-00-lisa.jpeg"`
 }
 
 type RegisterUserPayload struct {
-	FirstName string `json:"firstName" validate:"required" example:"Hello"`
-	LastName  string `json:"lastName" validate:"required" example:"World"`
-	Email     string `json:"email" validate:"required,email" example:"dummy@gmail.com"`
-	Password  string `json:"password" validate:"required,min=3,max=130" example:"dummy_password"`
+	FirstName   string `json:"first_name" validate:"required" example:"Hello"`
+	LastName    string `json:"last_name" validate:"required" example:"World"`
+	DateOfBirth string `json:"date_of_birth" validate:"required,datetime=2006-01-02" example:"2006-01-02"`
+	Email       string `json:"email" validate:"required,email" example:"dummy@gmail.com"`
+	Password    string `json:"password" validate:"required,min=3,max=130" example:"dummy_password"`
 }
 
 type LoginUserPayload struct {
