@@ -39,7 +39,7 @@ func main() {
 
 	initStorage(db)
 
-	server := api.NewAPIServer(":3000", db)
+	server := api.NewAPIServer(":"+AppSetting.Envs.Port, db)
 
 	if err := server.Run(); err != nil {
 		log.Fatal(err)
