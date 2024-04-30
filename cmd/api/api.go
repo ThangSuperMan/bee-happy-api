@@ -7,6 +7,7 @@ import (
 
 	"github.com/gorilla/mux"
 	httpSwagger "github.com/swaggo/http-swagger"
+	"github.com/thangsuperman/bee-happy/services/like"
 	"github.com/thangsuperman/bee-happy/services/post"
 	"github.com/thangsuperman/bee-happy/services/upload"
 	"github.com/thangsuperman/bee-happy/services/user"
@@ -35,6 +36,10 @@ func (s *APIServer) Run() error {
 	postStore := post.NewStore(s.db)
 	postHandler := post.NewHandler(postStore, userStore)
 	postHandler.RegisterRoutes(subrouter)
+
+	likeStore := like.NewStore(s.db)
+	likeHandler := like.NewHandler(likeStore, userStore)
+	likeHandler.RegisterRoutes(subrouter)
 
 	uploadHandler := upload.NewHandler(userStore)
 	uploadHandler.RegisterRoutes(subrouter)

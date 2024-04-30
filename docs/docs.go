@@ -215,6 +215,77 @@ const docTemplate = `{
                 }
             }
         },
+        "/api/v1/post/{id}/like": {
+            "post": {
+                "description": "Like post",
+                "consumes": [
+                    "application/json"
+                ],
+                "produces": [
+                    "application/json"
+                ],
+                "tags": [
+                    "Post activites"
+                ],
+                "summary": "Like post",
+                "parameters": [
+                    {
+                        "type": "string",
+                        "description": "JWT Token",
+                        "name": "Authorization",
+                        "in": "header",
+                        "required": true
+                    },
+                    {
+                        "type": "string",
+                        "description": "Post ID",
+                        "name": "id",
+                        "in": "path",
+                        "required": true
+                    }
+                ],
+                "responses": {
+                    "200": {
+                        "description": "Success",
+                        "schema": {
+                            "$ref": "#/definitions/types.BaseResponse"
+                        }
+                    }
+                }
+            }
+        },
+        "/api/v1/post/{id}/likes": {
+            "get": {
+                "description": "Get total likes",
+                "consumes": [
+                    "application/json"
+                ],
+                "produces": [
+                    "application/json"
+                ],
+                "tags": [
+                    "Post activites"
+                ],
+                "summary": "Get total likes",
+                "parameters": [
+                    {
+                        "type": "string",
+                        "description": "Post ID",
+                        "name": "id",
+                        "in": "path",
+                        "required": true
+                    }
+                ],
+                "responses": {
+                    "200": {
+                        "description": "Success",
+                        "schema": {
+                            "$ref": "#/definitions/types.BaseResponse"
+                        }
+                    }
+                }
+            }
+        },
         "/api/v1/posts": {
             "get": {
                 "description": "Get all post",

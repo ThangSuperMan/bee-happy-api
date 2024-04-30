@@ -43,6 +43,7 @@ func (h *Handler) handleGetPost(w http.ResponseWriter, r *http.Request) {
 	postId, err := strconv.Atoi(stringPostId)
 	if err != nil {
 		utils.WriteError(w, http.StatusInternalServerError, err)
+		return
 	}
 
 	p, err := h.store.GetPostById(postId)
@@ -53,7 +54,9 @@ func (h *Handler) handleGetPost(w http.ResponseWriter, r *http.Request) {
 
 	if err != nil {
 		utils.WriteError(w, http.StatusInternalServerError, err)
+		return
 	}
+
 	utils.WriteJSON(w, http.StatusOK, types.BaseResponse{
 		Message:  "Get post successfully",
 		Metadata: p,
@@ -110,10 +113,12 @@ func (h *Handler) handleUpdatePost(w http.ResponseWriter, r *http.Request) {
 	postId, err := strconv.Atoi(stringPostId)
 	if err != nil {
 		utils.WriteError(w, http.StatusInternalServerError, err)
+		return
 	}
 
 	if err := h.store.UpdatePost(payload, postId, authorId); err != nil {
 		utils.WriteError(w, http.StatusInternalServerError, err)
+		return
 	}
 
 	utils.WriteJSON(w, http.StatusOK, types.BaseResponse{
@@ -138,6 +143,7 @@ func (h *Handler) handleDeletePost(w http.ResponseWriter, r *http.Request) {
 	postId, err := strconv.Atoi(stringPostId)
 	if err != nil {
 		utils.WriteError(w, http.StatusInternalServerError, err)
+		return
 	}
 
 	err = h.store.DeletePostById(postId, authorId)
@@ -179,6 +185,7 @@ func (h *Handler) handleCreateProduct(w http.ResponseWriter, r *http.Request) {
 	err := h.store.CreatePost(payload, authorId)
 	if err != nil {
 		utils.WriteError(w, http.StatusInternalServerError, err)
+		return
 	}
 
 	utils.WriteJSON(w, http.StatusOK, types.BaseResponse{

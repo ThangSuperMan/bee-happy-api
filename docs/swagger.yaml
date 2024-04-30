@@ -224,6 +224,53 @@ paths:
       summary: Update a post
       tags:
       - Post
+  /api/v1/post/{id}/like:
+    post:
+      consumes:
+      - application/json
+      description: Like post
+      parameters:
+      - description: JWT Token
+        in: header
+        name: Authorization
+        required: true
+        type: string
+      - description: Post ID
+        in: path
+        name: id
+        required: true
+        type: string
+      produces:
+      - application/json
+      responses:
+        "200":
+          description: Success
+          schema:
+            $ref: '#/definitions/types.BaseResponse'
+      summary: Like post
+      tags:
+      - Post activites
+  /api/v1/post/{id}/likes:
+    get:
+      consumes:
+      - application/json
+      description: Get total likes
+      parameters:
+      - description: Post ID
+        in: path
+        name: id
+        required: true
+        type: string
+      produces:
+      - application/json
+      responses:
+        "200":
+          description: Success
+          schema:
+            $ref: '#/definitions/types.BaseResponse'
+      summary: Get total likes
+      tags:
+      - Post activites
   /api/v1/posts:
     get:
       consumes:

@@ -26,7 +26,7 @@ func main() {
 	db, err := db.NewMySQLStorage(mysql.Config{
 		User:                 AppSetting.Envs.DBUser,
 		Passwd:               AppSetting.Envs.DBPassword,
-		Addr:                 AppSetting.Envs.PublicHost,
+		Addr:                 AppSetting.Envs.DBAddress,
 		DBName:               AppSetting.Envs.DBName,
 		Net:                  "tcp",
 		AllowNativePasswords: true,
@@ -52,5 +52,5 @@ func initStorage(db *sql.DB) {
 		log.Fatal(err)
 	}
 
-	log.Println("DB: Successfully connected!")
+	log.Println("Successfully connected to Mysql")
 }

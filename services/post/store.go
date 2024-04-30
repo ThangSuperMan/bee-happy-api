@@ -12,7 +12,7 @@ type Store struct {
 	db *sql.DB
 }
 
-func newStore(db *sql.DB) *Store {
+func NewStore(db *sql.DB) *Store {
 	return &Store{db: db}
 }
 
@@ -108,10 +108,6 @@ func (s *Store) DeletePostById(postId int, authorId int) error {
 	}
 
 	return nil
-}
-
-func NewStore(db *sql.DB) *Store {
-	return &Store{db: db}
 }
 
 func scanRowsIntoPost(rows *sql.Rows) (*types.Post, error) {

@@ -4,6 +4,12 @@ import (
 	"time"
 )
 
+type LikeStore interface {
+	CountLikes(postId int) (int, error)
+	CreateLike(userId int, authorId int) error
+	DeleteLike(userId int, authorId int) error
+}
+
 type UserStore interface {
 	GetUserByEmail(email string) (*User, error)
 	GetUserByID(id int) (*User, error)

@@ -14,7 +14,9 @@ type Config struct {
 	DBUser                 string
 	DBPassword             string
 	DBAddress              string
+	DBHost                 string
 	DBName                 string
+	RedisAddress           string
 	JWTSecret              string
 	JWTExpirationInSeconds int64
 	AWSRegion              string
@@ -35,6 +37,7 @@ func initConfig() Config {
 		DBPassword:             getEnv("DB_PASSWORD", "hellodb"),
 		DBAddress:              fmt.Sprintf("%s:%s", getEnv("DB_HOST", "127.0.0.1"), getEnv("DB_PORT", "3306")),
 		DBName:                 getEnv("DB_NAME", "dev"),
+		RedisAddress:           fmt.Sprintf("%s:%s", getEnv("REDIS_HOST", "127.0.0.1"), getEnv("REDIS_PORT", "6379")),
 		JWTSecret:              getEnv("JWT_SECRET", "secret123"),
 		JWTExpirationInSeconds: getEnvAsInt("JWT_EXP", 3600*24*7),
 		AWSRegion:              getEnv("AWS_REGION", "ap-southeast-1"),
