@@ -46,10 +46,11 @@ func main() {
 	}
 
 	if cmd == "down" {
-		err := m.Down()
+		err := m.Steps(-1)
 		if err != nil && err != migrate.ErrNoChange {
 			log.Fatal(err)
 		}
+		fmt.Println("Migration down completed")
 		return
 	}
 
