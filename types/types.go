@@ -34,7 +34,7 @@ type Post struct {
 	Title     string    `json:"title"`
 	Content   string    `json:"content"`
 	ImageURL  string    `json:"image_url"`
-	AuthorId  string    `json:"author_id"`
+	AuthorId  int       `json:"author_id"`
 	CreatedAt time.Time `json:"created_at"`
 	UpdatedAt time.Time `json:"updated_at "`
 }

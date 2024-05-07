@@ -1,0 +1,28 @@
+# NOTE: priority from the docker compose environment field > env_file 
+version: '3.4'
+services:
+  mysql-master:
+    image: mysql:8.3.0
+    ports:
+      - '${MYSQL_MASTER_CONTAINER_PORT}:${MYSQL_PORT}'
+    environment:
+      MYSQL_ROOT_PASSWORD: ${MYSQL_MASTER_ROOT_PASSWORD}
+    volumes:
+      - ./mysql/master/my.cnf:/etc/my.cnf
+    networks:
+      - master_slave_mysql
+
+  mysql-slave:
+    image: mysql:8.3.0
+    ports:
+      - '${MYSQL_SLAVE_CONTAINER_PORT}:${MYSQL_PORT}'
+    environment:
+      MYSQL_ROOT_PASSWORD: ${MYSQL_SLAVE_ROOT_PASSWORD}
+    volumes:
+      - ./mysql/slave/my.cnf:/etc/my.cnf
+    networks:
+      - master_slave_mysql
+
+networks:
+  master_slave_mysql:
+    driver: bridge

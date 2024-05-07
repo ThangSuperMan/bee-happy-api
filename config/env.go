@@ -19,6 +19,11 @@ type Config struct {
 	RedisAddress           string
 	JWTSecret              string
 	JWTExpirationInSeconds int64
+	RabbitMQUsername       string
+	RabbitMQPassword       string
+	RabbitMQHost           string
+	RabbitMQVirtualHost    string
+	RabbitMQPort           string
 	AWSRegion              string
 	AWSBucketAccessKey     string
 	AWSBucketSecretKey     string
@@ -38,6 +43,11 @@ func initConfig() Config {
 		DBAddress:              fmt.Sprintf("%s:%s", getEnv("DB_HOST", "127.0.0.1"), getEnv("DB_PORT", "3306")),
 		DBName:                 getEnv("DB_NAME", "dev"),
 		RedisAddress:           fmt.Sprintf("%s:%s", getEnv("REDIS_HOST", "127.0.0.1"), getEnv("REDIS_PORT", "6379")),
+		RabbitMQUsername:       getEnv("RABBITMQ_USERNAME", "guest"),
+		RabbitMQPassword:       getEnv("RABBITMQ_PASSWORD", "guest"),
+		RabbitMQHost:           getEnv("RABBITMQ_HOST", "localhost"),
+		RabbitMQVirtualHost:    getEnv("RABBITMQ_VIRTUAL_HOST", "customers"),
+		RabbitMQPort:           getEnv("RABBITMQ_PORT", "secret123"),
 		JWTSecret:              getEnv("JWT_SECRET", "secret123"),
 		JWTExpirationInSeconds: getEnvAsInt("JWT_EXP", 3600*24*7),
 		AWSRegion:              getEnv("AWS_REGION", "ap-southeast-1"),

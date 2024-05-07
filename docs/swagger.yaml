@@ -271,6 +271,32 @@ paths:
       summary: Get total likes
       tags:
       - Post activites
+  /api/v1/post/{id}/unlike:
+    post:
+      consumes:
+      - application/json
+      description: Unlike post
+      parameters:
+      - description: JWT Token
+        in: header
+        name: Authorization
+        required: true
+        type: string
+      - description: Post ID
+        in: path
+        name: id
+        required: true
+        type: string
+      produces:
+      - application/json
+      responses:
+        "200":
+          description: Success
+          schema:
+            $ref: '#/definitions/types.BaseResponse'
+      summary: Unlike post
+      tags:
+      - Post activites
   /api/v1/posts:
     get:
       consumes:

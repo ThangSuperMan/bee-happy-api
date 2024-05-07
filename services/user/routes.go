@@ -68,8 +68,13 @@ func (h *Handler) handleLogin(w http.ResponseWriter, r *http.Request) {
 	}
 
 	utils.WriteJSON(w, http.StatusOK, types.BaseResponse{
-		Message:  "Login successfully",
-		Metadata: map[string]string{"token": token},
+		Message: "Login successfully",
+		Metadata: map[string]any{
+			"token":     token,
+			"user_id":   u.ID,
+			"full_name": fmt.Sprintf("%s %s", u.FirstName, u.LastName),
+			"email":     u.Email,
+		},
 	})
 }
 

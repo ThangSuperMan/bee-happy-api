@@ -47,7 +47,6 @@ func (h *Handler) handleGetTotalLikes(w http.ResponseWriter, r *http.Request) {
 		return
 	}
 
-	// TODO: move this one to constant
 	cacheKey := fmt.Sprintf("post:%d:total_likes", postId)
 	cacheValue, err := db.RedisClient.Get(context.Background(), cacheKey).Result()
 
@@ -71,14 +70,13 @@ func (h *Handler) handleGetTotalLikes(w http.ResponseWriter, r *http.Request) {
 		return
 	}
 
-	log.Println("Get value from cache")
 	totalLikes, err := strconv.Atoi(cacheValue)
 	if err != nil {
 		utils.WriteError(w, http.StatusInternalServerError, err)
 	}
 
 	utils.WriteJSON(w, http.StatusOK, types.BaseResponse{
-		Message:  "Get post successfully",
+		Message:  "Get total post's likes successfully",
 		Metadata: map[string]int{"total_likes": totalLikes},
 	})
 }
@@ -102,17 +100,14 @@ func (h *Handler) handleLikePost(w http.ResponseWriter, r *http.Request) {
 		return
 	}
 
-	// TODO: update db
 	err = h.store.CreateLike(userId, postId)
 	if err != nil {
 		utils.WriteError(w, http.StatusInternalServerError, err)
 		return
 	}
 
-	// TODO: del cache
 	cacheKey := fmt.Sprintf("post:%d:total_likes", postId)
 	err = db.RedisClient.Del(context.Background(), cacheKey).Err()
-	fmt.Println("delete cache")
 	if err != nil {
 		utils.WriteError(w, http.StatusInternalServerError, err)
 		return
@@ -124,6 +119,41 @@ func (h *Handler) handleLikePost(w http.ResponseWriter, r *http.Request) {
 	})
 }
 
+// handleUnlikePost unlike post
+// @Summary Unlike post
+// @Description Unlike post
+// @Tags Post activites
+// @Accept json
+// @Produce json
+// @Param Authorization header string true "JWT Token"
+// @Param id path string true "Post ID"
+// @Success 200 {object} types.BaseResponse "Success"
+// @Router /api/v1/post/{id}/unlike [post]
 func (h *Handler) handleUnlikePost(w http.ResponseWriter, r *http.Request) {
+	userId := auth.GetUserIdFromContext(r.Context())
+	stringPostId := mux.Vars(r)["id"]
+	postId, err := strconv.Atoi(stringPostId)
+	if err != nil {
+		utils.WriteError(w, http.StatusInternalServerError, err)
+		return
+	}
+
+	err = h.store.DeleteLike(userId, postId)
+	if err != nil {
+		utils.WriteError(w, http.StatusInternalServerError, err)
+		return
+	}
+
+	cacheKey := fmt.Sprintf("post:%d:total_likes", postId)
+	err = db.RedisClient.Del(context.Background(), cacheKey).Err()
+	if err != nil {
+		utils.WriteError(w, http.StatusInternalServerError, err)
+		return
+	}
+
+	utils.WriteJSON(w, http.StatusOK, types.BaseResponse{
+		Message:  "Unlike post successfully",
+		Metadata: nil,
+	})
 
 }

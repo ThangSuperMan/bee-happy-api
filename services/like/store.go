@@ -37,11 +37,11 @@ func (s *Store) CreateLike(userId int, authorId int) error {
 	return nil
 }
 
-func (s *Store) DeleteLike(userId int, authorId int) error {
+func (s *Store) DeleteLike(userId int, postId int) error {
 	_, err := s.db.Exec(`
     DELETE FROM likes
-    WHERE user_id = ? AND author_id = ?
-    `, userId, authorId)
+    WHERE user_id = ? AND post_id = ?
+    `, userId, postId)
 	if err != nil {
 		return err
 	}
