@@ -82,7 +82,24 @@ func (s *Store) GetPostById(postId int) (*types.Post, error) {
 }
 
 func (s *Store) GetPosts() ([]types.Post, error) {
-	rows, err := s.db.Query("SELECT * FROM posts")
+	rows, err := s.db.Query(`
+    SELECT 
+      users.first_name, 
+      users.last_name,
+      posts.author_id, 
+      posts.id, 
+      posts.title, 
+      posts.content, 
+      posts.image_url, 
+      posts.created_at, 
+      posts.updated_at
+    FROM 
+      posts 
+    INNER JOIN 
+      users 
+    ON 
+      users.id = posts.author_id`)
+
 	if err != nil {
 		return nil, err
 	}
@@ -114,11 +131,13 @@ func scanRowsIntoPost(rows *sql.Rows) (*types.Post, error) {
 	post := new(types.Post)
 
 	err := rows.Scan(
+		&post.Author.FirstName,
+		&post.Author.LastName,
+		&post.AuthorId,
 		&post.ID,
 		&post.Title,
 		&post.Content,
 		&post.ImageURL,
-		&post.AuthorId,
 		&post.CreatedAt,
 		&post.UpdatedAt,
 	)

@@ -37,6 +37,12 @@ type Post struct {
 	AuthorId  int       `json:"author_id"`
 	CreatedAt time.Time `json:"created_at"`
 	UpdatedAt time.Time `json:"updated_at "`
+	Author    Author    `json:"author"`
+}
+
+type Author struct {
+	FirstName string `json:"first_name"`
+	LastName  string `json:"last_name"`
 }
 
 type User struct {
@@ -46,6 +52,7 @@ type User struct {
 	LastName    string    `json:"last_name"`
 	Password    string    `json:"-"`
 	DateOfBirth string    `json:"date_of_birth" validate:"required,datetime"`
+	AvatarURL   string    `json:"avatar_url"`
 	CreatedAt   time.Time `json:"created_at"`
 	UpdatedAt   time.Time `json:"updated_at"`
 }

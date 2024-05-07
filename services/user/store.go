@@ -74,6 +74,8 @@ func (s *Store) GetUserByEmail(email string) (*types.User, error) {
 func scanRowsIntoUser(rows *sql.Rows) (*types.User, error) {
 	user := new(types.User)
 
+	var avatarURL sql.NullString
+
 	err := rows.Scan(
 		&user.ID,
 		&user.FirstName,
@@ -81,12 +83,17 @@ func scanRowsIntoUser(rows *sql.Rows) (*types.User, error) {
 		&user.Email,
 		&user.Password,
 		&user.DateOfBirth,
+		&avatarURL,
 		&user.CreatedAt,
 		&user.UpdatedAt,
 	)
 
 	if err != nil {
 		return nil, err
+	}
+
+	if avatarURL.Valid {
+		user.AvatarURL = avatarURL.String
 	}
 
 	return user, nil
