@@ -65,7 +65,11 @@ func (s *Store) UpdatePost(payload types.UpdatePostPayload, postId int, authorId
 }
 
 func (s *Store) GetPostById(postId int) (*types.Post, error) {
-	rows, err := s.db.Query("SELECT * FROM posts WHERE id = ?", postId)
+	rows, err := s.db.Query(`
+    SELECT * 
+    FROM posts
+    WHERE id = ? 
+    ORDER BY created_at DESC`, postId)
 	p := new(types.Post)
 	for rows.Next() {
 		p, err = scanRowsIntoPost(rows)
@@ -87,18 +91,20 @@ func (s *Store) GetPosts() ([]types.Post, error) {
       users.first_name, 
       users.last_name,
       posts.author_id, 
-      posts.id, 
-      posts.title, 
-      posts.content, 
+      posts.id,
+      posts.title,
+      posts.content,
       posts.image_url, 
       posts.created_at, 
       posts.updated_at
-    FROM 
-      posts 
-    INNER JOIN 
-      users 
+    FROM
+      posts
+    INNER JOIN
+      users
     ON 
-      users.id = posts.author_id`)
+      users.id = posts.author_id
+    ORDER BY
+      created_at DESC`)
 
 	if err != nil {
 		return nil, err
